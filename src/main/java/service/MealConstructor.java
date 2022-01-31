@@ -10,6 +10,5 @@ public class MealConstructor {
 
     public static List<Meal> constructMeals(final List<Food> foods) {
         return new ArrayList<Meal>();
-        
     }
 }
