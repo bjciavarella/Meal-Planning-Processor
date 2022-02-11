@@ -16,7 +16,7 @@ public class Food {
     private FoodGroup foodGroup;
 
     @CsvBindByName
-    private double quantity;
+    private double quantity = 1;
 
     @CsvBindByName
     private double calories;

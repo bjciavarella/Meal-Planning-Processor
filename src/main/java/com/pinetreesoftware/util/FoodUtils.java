@@ -49,10 +49,14 @@ public class FoodUtils {
     }
 
     public static void insertFoodIntoMealsIfItFits(List<Food> foods, Meal meal, Food food, Nutrients nutrients) {
-        if (doesFoodFitInMeal(meal, food, nutrients)) {
+        if (doesFoodFitInMeal(meal, food, nutrients) && !isFoodAlreadyInList(foods, food)) {
             foods.add(food);
             nutrients.updateRemainingNutrients(food.getCalories(), food.getCarbs(), food.getFat(), food.getProtein());
         }
+    }
+
+    public static boolean isFoodAlreadyInList(List<Food> foods, Food food) {
+        return foods.contains(food);
     }
 
     public static void multiplyQuantityOfFood(Food food, double quantity) {
