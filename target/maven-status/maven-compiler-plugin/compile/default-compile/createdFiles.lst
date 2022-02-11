@@ -1,0 +1,12 @@
+com\pinetreesoftware\model\Meal.class
+com\pinetreesoftware\model\Food.class
+com\pinetreesoftware\constants\MealPlanningConstants.class
+com\pinetreesoftware\model\Day.class
+com\pinetreesoftware\model\Nutrients.class
+com\pinetreesoftware\service\BreakfastBuilder.class
+com\pinetreesoftware\util\ResourceUtil.class
+com\pinetreesoftware\constants\FoodGroup.class
+com\pinetreesoftware\MealPlanningProcessor.class
+com\pinetreesoftware\service\MealConstructor.class
+com\pinetreesoftware\util\FoodUtils.class
+com\pinetreesoftware\model\Days.class

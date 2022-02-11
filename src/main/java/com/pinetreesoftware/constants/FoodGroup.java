@@ -1,4 +1,4 @@
-package model;
+package com.pinetreesoftware.constants;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -8,10 +8,11 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 public enum FoodGroup {
     PROTEIN("protein"),
+    SHAKE("shake"),
     CARB("carb"),
     FRUIT("fruit"),
     DAIRY("dairy"),
-    VEGATABLE("vegetable");
+    VEGETABLE("vegetable");
 
     private final String group;
 }
