@@ -13,43 +13,87 @@ public class MealConstructor {
 
     public static Days constructDailyMeals(final List<Food> foods, final Nutrients nutrients) {
         System.out.println("Constructing Meals...");
-        List<Food> allFoodsButProtein = new ArrayList<>();
-        allFoodsButProtein.addAll(getFoodGroupFromFoods(foods, FoodGroup.CARB));
-        allFoodsButProtein.addAll(getFoodGroupFromFoods(foods, FoodGroup.DAIRY));
-        allFoodsButProtein.addAll(getFoodGroupFromFoods(foods, FoodGroup.VEGETABLE));
-        allFoodsButProtein.addAll(getFoodGroupFromFoods(foods, FoodGroup.FRUIT));
+        List<Food> carbs = getFoodGroupFromFoods(foods, FoodGroup.CARB);
+        List<Food> dairy = getFoodGroupFromFoods(foods, FoodGroup.DAIRY);
+        List<Food> vegetable = getFoodGroupFromFoods(foods, FoodGroup.VEGETABLE);
+        List<Food> fruit = getFoodGroupFromFoods(foods, FoodGroup.FRUIT);
+        List<Food> snack = getFoodGroupFromFoods(foods, FoodGroup.SNACK);
         List<Food> proteins = getFoodGroupFromFoods(foods, FoodGroup.PROTEIN);
+        Meal breakfast;
         Meal lunch;
         Meal dinner;
+        List<Food> breakfastFoods;
         List<Food> lunchFoods;
         List<Food> dinnerFoods;
         Days days = new Days();
-        int eggIndex = 0;
-        for (int i = 0; i < proteins.size(); i++) {
-            dinner = new Meal();
-            lunch = new Meal();
-            lunchFoods = new ArrayList<>();
-            dinnerFoods = new ArrayList<>();
-            Day day = new Day();
-            final Food protein = proteins.get(i);
+        Day day;
+        Food egg = new Food();
+        Food shake = new Food();
+        int eggIndex = -1;
+        int shakeIndex = -1;
+        int index = 0;
+        for (Food protein : proteins) {
+            //Getting egg and shake proteins since we will be added them to every day no matter what
             if (MealPlanningConstants.EGG.equalsIgnoreCase(protein.getName())) {
-                eggIndex = i;
+                egg = protein.copyFood();
+                eggIndex = index;
+            }
+            if (protein.getName().toLowerCase().contains(MealPlanningConstants.SHAKE)) {
+                shake = protein.copyFood();
+                shakeIndex = index;
+            }
+            index++;
+        }
+        if (eggIndex != -1) {
+            proteins.remove(eggIndex);
+            shakeIndex--;
+        }
+        if (shakeIndex != -1) {
+            proteins.remove(shakeIndex);
+        }
+        for (int i = 0; i < proteins.size(); i++) {
+            if (i + 1 >= proteins.size()) {
                 continue;
             }
+            breakfast = new Meal();
+            breakfastFoods = new ArrayList<>();
+            lunchFoods = new ArrayList<>();
+            dinnerFoods = new ArrayList<>();
             Nutrients remainingNutrients = nutrients.copy();
-            lunchFoods.add(protein);
-            remainingNutrients.updateRemainingNutrients(protein.getCalories(), protein.getCarbs(), protein.getFat(), protein.getProtein());
-            int dinnerProteinIndex = i + 1 < proteins.size() ? i + 1 : 0;
-            Food dinnerProtein = proteins.get(dinnerProteinIndex);
-            dinnerFoods.add(dinnerProtein);
-            remainingNutrients.updateRemainingNutrients(dinnerProtein.getCalories(), dinnerProtein.getCarbs(), dinnerProtein.getFat(), dinnerProtein.getProtein());
-            lunch.setFoodsAndCalculateNutritionalValues(lunchFoods);
-            dinner.setFoodsAndCalculateNutritionalValues(dinnerFoods);
-            buildMealsWithFoods(lunch, dinner, allFoodsButProtein, remainingNutrients);
-            day.setBreakfast(BreakfastBuilder.buildBreakFast(remainingNutrients, proteins, allFoodsButProtein, eggIndex));
-            day.setLunch(lunch);
-            day.setDinner(dinner);
-            days.addDayAndCalculateNutritionalValues(day, remainingNutrients);
+            final Food protein = proteins.get(i);
+            FoodUtils.insertFoodIntoFoodsIfItFits(breakfastFoods, breakfast, egg, remainingNutrients);
+            FoodUtils.insertFoodIntoFoodsIfItFits(breakfastFoods, breakfast, shake, remainingNutrients);
+            breakfast.setFoodsAndCalculateNutritionalValues(breakfastFoods);
+            remainingNutrients.addFoodToFoodListAndUpdateRemainingNutrients(lunchFoods, protein);
+            for (int j = i + 1; j < proteins.size(); j++) {
+                Food protein2 = proteins.get(j);
+                remainingNutrients.addFoodToFoodListAndUpdateRemainingNutrients(dinnerFoods, protein2);
+                for (int k = 0; k < carbs.size(); k++) {
+                    if (k + 1 >= carbs.size()) {
+                        continue;
+                    }
+                    Food carb = carbs.get(i);
+                    for (int l = k + 1; l < carbs.size(); l++) {
+                        Nutrients dailyNutrients = remainingNutrients.copy();
+                        Food carb2 = carbs.get(l);
+                        lunch = new Meal();
+                        dinner = new Meal();
+                        List<Food> newDinnerFoods = FoodUtils.copyFoods(dinnerFoods);
+                        List<Food> newLunchFoods = FoodUtils.copyFoods(lunchFoods);
+                        FoodUtils.insertFoodIntoFoodsIfItFits(newLunchFoods, lunch, carb, dailyNutrients);
+                        FoodUtils.insertFoodIntoFoodsIfItFits(newDinnerFoods, dinner, carb2, dailyNutrients);
+                        lunch.setFoodsAndCalculateNutritionalValues(newLunchFoods);
+                        dinner.setFoodsAndCalculateNutritionalValues(newDinnerFoods);
+
+                        day = new Day();
+                        day.setBreakfast(breakfast);
+                        day.setLunch(lunch);
+                        day.setDinner(dinner);
+                        days.addDayAndCalculateNutritionalValues(day, dailyNutrients);
+                    }
+                }
+
+            }
         }
         return days;
     }
@@ -66,8 +110,8 @@ public class MealConstructor {
         while (roomInMeals) {
             Food randomLunchFood = supplementalFoods.get(randomizer.nextInt(supplementalFoods.size()));
             Food randomDinnerFood = supplementalFoods.get(randomizer.nextInt(supplementalFoods.size()));
-            FoodUtils.insertFoodIntoMealsIfItFits(lunchFoods, lunch, randomLunchFood, remainingNutrients);
-            FoodUtils.insertFoodIntoMealsIfItFits(dinnerFoods, dinner, randomDinnerFood, remainingNutrients);
+            FoodUtils.insertFoodIntoFoodsIfItFits(lunchFoods, lunch, randomLunchFood, remainingNutrients);
+            FoodUtils.insertFoodIntoFoodsIfItFits(dinnerFoods, dinner, randomDinnerFood, remainingNutrients);
             attempts++;
             if (attempts > 2) {
                 roomInMeals = false;

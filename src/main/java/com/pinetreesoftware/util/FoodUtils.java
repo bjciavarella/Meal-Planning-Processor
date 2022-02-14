@@ -1,9 +1,11 @@
 package com.pinetreesoftware.util;
 
+import com.pinetreesoftware.model.Day;
 import com.pinetreesoftware.model.Food;
 import com.pinetreesoftware.model.Meal;
 import com.pinetreesoftware.model.Nutrients;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FoodUtils {
@@ -48,7 +50,7 @@ public class FoodUtils {
                 (mealNutrients.getProteins() + food.getProtein() <= nutrients.getProteins());
     }
 
-    public static void insertFoodIntoMealsIfItFits(List<Food> foods, Meal meal, Food food, Nutrients nutrients) {
+    public static void insertFoodIntoFoodsIfItFits(List<Food> foods, Meal meal, Food food, Nutrients nutrients) {
         if (doesFoodFitInMeal(meal, food, nutrients) && !isFoodAlreadyInList(foods, food)) {
             foods.add(food);
             nutrients.updateRemainingNutrients(food.getCalories(), food.getCarbs(), food.getFat(), food.getProtein());
@@ -65,5 +67,11 @@ public class FoodUtils {
         food.setProtein(food.getProtein() * quantity);
         food.setCarbs(food.getCarbs() * quantity);
         food.setFat(food.getFat() * quantity);
+    }
+
+    public static List<Food> copyFoods(List<Food> foods) {
+        List<Food> foodList = new ArrayList<>();
+        foodList.addAll(foods);
+        return foodList;
     }
 }

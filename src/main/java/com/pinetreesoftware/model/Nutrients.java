@@ -24,6 +24,11 @@ public class Nutrients {
         this.setProteins(this.getProteins() - proteins);
     }
 
+    public void addFoodToFoodListAndUpdateRemainingNutrients(List<Food> foods, Food food) {
+        foods.add(food);
+        this.updateRemainingNutrients(food.getCalories(), food.getCarbs(), food.getFat(), food.getProtein());
+    }
+
     public Nutrients copy() {
         Nutrients nutrients = new Nutrients();
         nutrients.setCarbs(this.getCarbs());

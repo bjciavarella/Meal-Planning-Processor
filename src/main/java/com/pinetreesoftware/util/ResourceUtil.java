@@ -3,7 +3,6 @@ package com.pinetreesoftware.util;
 import com.google.gson.Gson;
 import com.opencsv.bean.CsvToBeanBuilder;
 import com.pinetreesoftware.constants.MealPlanningConstants;
-import com.pinetreesoftware.model.Day;
 import com.pinetreesoftware.model.Days;
 import com.pinetreesoftware.model.Food;
 
@@ -18,7 +17,6 @@ public class ResourceUtil {
     public static FileReader getFileReaderFromInputFolder(final String fileName) {
         try {
             final File inputDirectory = new File( getLocalDirectory() + "\\input");
-            System.out.println("INPUT DIRECTORY :: " + inputDirectory.getAbsolutePath());
             if (inputDirectory.exists()) {
                 if (inputDirectory.listFiles() != null) {
                     List<File> files = Arrays.asList(inputDirectory.listFiles());
@@ -40,7 +38,6 @@ public class ResourceUtil {
     private static String getLocalDirectory() {
         try {
             File currentDirectory =  new File(ResourceUtil.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            System.out.println("CURRENT DIRECTORY :: " + currentDirectory.getAbsolutePath());
             final String currentDirectoryString = currentDirectory.getAbsolutePath();
             return currentDirectoryString.substring(0, currentDirectoryString.lastIndexOf("\\"));
         } catch (URISyntaxException uriSyntaxException) {
@@ -81,18 +78,5 @@ public class ResourceUtil {
             System.out.println("File Reader is null");
         }
         return foodsList;
-    }
-
-    public static int getCaloriesFromFileReader(final FileReader fileReader) {
-        try {
-            BufferedReader reader = new BufferedReader(fileReader);
-            String currentLine = reader.readLine();
-            reader.close();
-            fileReader.close();
-            return Integer.parseInt(currentLine);
-        } catch (IOException ioException) {
-            System.out.println("ioException - " + ioException.getMessage());
-        }
-        return 0;
     }
 }

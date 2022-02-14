@@ -2,12 +2,14 @@ package com.pinetreesoftware.model;
 
 import com.pinetreesoftware.util.FoodUtils;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.List;
 
 @Setter
 @Getter
+@NoArgsConstructor
 public class Meal {
     private List<Food> foods;
     private Nutrients nutrients = new Nutrients();

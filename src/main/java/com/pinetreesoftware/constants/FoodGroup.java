@@ -12,6 +12,7 @@ public enum FoodGroup {
     CARB("carb"),
     FRUIT("fruit"),
     DAIRY("dairy"),
+    SNACK("snack"),
     VEGETABLE("vegetable");
 
     private final String group;

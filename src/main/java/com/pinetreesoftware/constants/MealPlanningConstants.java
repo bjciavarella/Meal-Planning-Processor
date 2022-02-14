@@ -8,4 +8,6 @@ public class MealPlanningConstants {
     public final static String DAYS_JSON = "days.json";
 
     public final static String EGG = "egg";
+
+    public final static String SHAKE = "shake";
 }

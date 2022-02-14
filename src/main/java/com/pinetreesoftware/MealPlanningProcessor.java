@@ -2,7 +2,6 @@ package com.pinetreesoftware;
 
 import com.google.gson.Gson;
 import com.pinetreesoftware.constants.MealPlanningConstants;
-import com.pinetreesoftware.model.Day;
 import com.pinetreesoftware.model.Days;
 import com.pinetreesoftware.model.Food;
 import com.pinetreesoftware.model.Nutrients;

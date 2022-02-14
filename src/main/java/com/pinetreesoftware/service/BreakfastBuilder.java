@@ -17,12 +17,12 @@ public class BreakfastBuilder {
         List<Food> foods = new ArrayList<>();
         Food egg = proteins.get(eggsIndex).copyFood();
         FoodUtils.multiplyQuantityOfFood(egg, 4);
-        FoodUtils.insertFoodIntoMealsIfItFits(foods, breakFast, egg, nutrients);
+        FoodUtils.insertFoodIntoFoodsIfItFits(foods, breakFast, egg, nutrients);
         Random randomizer = new Random();
         Food randomFood = allFoodButProteins.get(randomizer.nextInt(allFoodButProteins.size()));
         int attempts = 0;
         while (attempts < 5) {
-            FoodUtils.insertFoodIntoMealsIfItFits(foods, breakFast, randomFood, nutrients);
+            FoodUtils.insertFoodIntoFoodsIfItFits(foods, breakFast, randomFood, nutrients);
             attempts++;
             randomFood = allFoodButProteins.get(randomizer.nextInt(allFoodButProteins.size()));
         }
